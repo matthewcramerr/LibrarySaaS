@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { actions, getState, uid, useStore, type State, type Vendor } from '../store';
 import { download, extractIsbns } from '../csv';
 import { PageHead } from '../ui';
+import Team from './Team';
 
 export default function SettingsView() {
   const { settings } = useStore();
@@ -28,8 +29,10 @@ export default function SettingsView() {
 
   return (
     <div className="page narrow">
-      <PageHead eyebrow="Settings" title="Your library" sub="Vendor discounts, catalog and backups." />
+      <PageHead eyebrow="Settings" title="Your library" sub="Team, vendor discounts, catalogs and backups." />
       {msg && <div className="banner">{msg}</div>}
+
+      <Team />
 
       <section className="card">
         <h2>Library</h2>
@@ -135,7 +138,7 @@ export default function SettingsView() {
 
       <section className="card">
         <h2>Backup</h2>
-        <p className="muted small">Your data lives in this browser. Download a backup to move it.</p>
+        <p className="muted small">Your library’s data is saved to your Shelfmark account. Download a copy anytime.</p>
         <div className="row">
           <button className="btn" onClick={() => download('shelfmark-backup.json', JSON.stringify(getState(), null, 2), 'application/json')}>
             Download backup

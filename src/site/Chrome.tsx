@@ -1,6 +1,8 @@
 import { Logo } from '../ui';
+import { useSession } from '../session';
 
 export function SiteNav({ path }: { path: string }) {
+  const session = useSession();
   const link = (href: string, label: string) => (
     <a href={`#${href}`} className={path === href ? 'on' : ''}>{label}</a>
   );
@@ -14,8 +16,14 @@ export function SiteNav({ path }: { path: string }) {
           {link('/pricing', 'Pricing')}
         </nav>
         <div className="nav-cta">
-          <a href="#/app/lists" className="nav-signin">Sign in</a>
-          <a href="#/app/discover" className="btn btn-dark">Start free</a>
+          {session.status === 'in' ? (
+            <a href="#/app/lists" className="btn btn-dark">Open app</a>
+          ) : (
+            <>
+              <a href="#/login" className="nav-signin">Sign in</a>
+              <a href="#/signup" className="btn btn-dark">Start free</a>
+            </>
+          )}
         </div>
       </div>
     </header>

@@ -2,18 +2,41 @@
 
 A SaaS focused on Librarian Collection Development. With another channel for Library Of Things Packaging, Processing, and Wholesaling.
 
+## Live site
+
+https://shelfmark.matthewcramerr.workers.dev — Cloudflare Workers + D1. The old GitHub Pages link forwards there.
+
 ## Run it
 
 ```bash
 npm install
-npm rebuild esbuild   # only if npm skipped install scripts
-npm run dev           # http://localhost:5173
-npm run build         # static site in dist/ (works on any static host)
+npm rebuild esbuild workerd   # only if npm skipped install scripts
+npm run db:migrate:local      # create the local database (first time)
+npm run dev:full              # app + API at http://localhost:8787
 ```
 
-## Live site
+`npm run dev` still runs the front end alone (no API, so sign-in won't work).
 
-https://matthewcramerr.github.io/shelfmark/ (deploys on every push to `main`).
+## Deploy
+
+```bash
+npm run db:migrate   # apply new migrations to the live database
+npm run deploy       # build and deploy the Worker
+```
+
+Deploys are manual for now (`wrangler` is logged in on the dev machine). To make someone an admin (sees every order and library):
+
+```bash
+npx wrangler d1 execute shelfmark --remote --command "UPDATE users SET is_admin = 1 WHERE email = 'you@example.com'"
+```
+
+## Backend
+
+- `worker/index.ts` — the API: accounts, sessions, libraries, team invites, collection data, Library of Things orders, admin.
+- `migrations/` — D1 schema.
+- Passwords: PBKDF2-SHA256 (100k iterations, per-user salt). Sessions: random token in an HttpOnly, Secure, SameSite=Lax cookie; only its SHA-256 is stored. Login locks for 15 minutes after 8 failures.
+- Every write must be same-origin JSON (CSRF guard). Every query is scoped to the signed-in user's library.
+- One library per account. The first person creates the library (owner); staff join with a one-time invite link (7 days).
 
 ## What's in v0.1
 
@@ -37,16 +60,19 @@ https://matthewcramerr.github.io/shelfmark/ (deploys on every push to `main`).
 
 ## Limits to know
 
-- Data is saved in the browser (localStorage). Settings has backup and restore. There are no accounts or multi-user access yet.
+- No email yet: no email verification, no password-reset email, no order notification email. Owners re-invite staff who forget passwords; check new orders on the Admin page. Adding an email provider (e.g. Resend) fixes all three.
+- Billing isn't wired up: plans and seat counts are shown, not charged.
+- Tax-exempt certificates: only the file name is recorded, not the file (needs R2 storage).
+- Kit order totals come from the browser; invoices are reviewed before payment.
 - Book data comes from Open Library (free, no key), with Google Books as the fallback. Neither gives reliable print list prices, so MSRP falls back to a default ($28) until a librarian enters it.
 - Discounts are defaults. Each library enters its own contract terms.
-- Library of Things orders and invoices only save in the browser. Nothing is sent and card checkout isn't live.
+- Card checkout isn't live; orders are invoice-only.
 - Kit prices and bundle discounts are placeholders.
 - Review/preview links are Google site searches, not direct integrations.
 
 ## Next
 
-1. Accounts + database (library → users, shared lists), with Stripe billing per library and per system.
+1. Email (verification, password reset, order alerts) and Stripe billing per library and per system.
 2. Real price feeds: Ingram iPage / ipage API access, and list price from an ONIX or ISBNdb feed.
 3. ILS integration (Koha, Polaris, Sierra, Evergreen) instead of a CSV upload.
 4. Review sources: Kirkus / Booklist / LJ stars, Edelweiss and NetGalley pre-pub links, the NYT Books API.

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Icon } from '../ui';
+import { api } from '../api';
 
 // Draft catalog + prices for demand testing (benchmark: Penworthy STEM kits sell for ~$145).
 const ITEMS = [
@@ -126,19 +127,29 @@ export default function Things() {
     r.readAsDataURL(f);
   }
 
-  function checkout(e: React.FormEvent) {
+  const [orderErr, setOrderErr] = useState('');
+  const [placing, setPlacing] = useState(false);
+
+  async function checkout(e: React.FormEvent) {
     e.preventDefault();
-    const no = `SM-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 90000) + 10000)}`;
+    setPlacing(true);
+    setOrderErr('');
+    // open the invoice window now, inside the click, so pop-up blockers allow it
+    const w = window.open('', '_blank');
     try {
-      const k = 'shelfmark:lot-orders';
-      localStorage.setItem(k, JSON.stringify([...JSON.parse(localStorage.getItem(k) ?? '[]'), { no, ...form, exempt, certName, subscriber, cart: cart.map(({ logo, ...rest }) => ({ ...rest, hasLogo: !!logo })), total: cartTotal, at: new Date().toISOString() }]));
-    } catch { /* storage blocked */ }
-    printInvoice(no);
-    setSent(no);
+      const items = cart.map((l) => ({ title: l.title, item: l.item, caseId: l.caseId, color: l.color, age: l.age, loan: l.loan, extras: l.extras, qty: l.qty, unit: Math.round(l.unit * 100) / 100, hasLogo: !!l.logo }));
+      const r = await api.post<{ number: string }>('/api/orders', { ...form, exempt, certName, subscriber, pay, items, total: Math.round(cartTotal * 100) / 100 });
+      printInvoice(r.number, w);
+      setSent(r.number);
+    } catch (x) {
+      w?.close();
+      setOrderErr((x as Error).message);
+    } finally {
+      setPlacing(false);
+    }
   }
 
-  function printInvoice(no: string) {
-    const w = window.open('', '_blank');
+  function printInvoice(no: string, w: Window | null) {
     if (!w) return;
     const rows = cart.map((l) => `<tr><td>${esc(l.title)}<div class="s">${esc(CASES.find((x) => x.id === l.caseId)!.name)} · ${esc(l.age)} · MARC + shelf tag</div></td><td>${l.qty}</td><td>${money(l.unit)}</td><td>${money(l.unit * l.qty)}</td></tr>`).join('');
     w.document.write(`<!doctype html><title>Invoice ${no}</title><style>body{font:14px/1.5 Georgia,serif;color:#16140f;max-width:720px;margin:48px auto;padding:0 24px}h1{font-weight:500;margin:0}table{width:100%;border-collapse:collapse;margin:24px 0}td,th{text-align:left;padding:10px 6px;border-bottom:1px solid #ddd}th{font:12px system-ui;color:#777;text-transform:uppercase}.s{font:12px system-ui;color:#777}.top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #16140f;padding-bottom:16px}.tot{text-align:right;font-size:20px}.note{font:13px system-ui;color:#555;margin-top:24px}</style>
@@ -410,7 +421,7 @@ export default function Things() {
             <div className="cart-ship"><span>Shipping</span><span>{subscriber ? 'Free for Shelfmark libraries' : 'Calculated on invoice'}</span></div>
             <div className="cart-ship"><span>Sales tax</span><span>{exempt ? 'Tax exempt' : 'Calculated on invoice'}</span></div>
             {sent ? (
-              <div className="banner"><Icon name="check" /> Invoice {sent} created. Print it or save it as a PDF for your municipality. We start building your kits when payment arrives. (Saved in this browser only for now.)</div>
+              <div className="banner"><Icon name="check" /> Invoice {sent} created. We got your order. Print the invoice or save it as a PDF for your municipality. We start building your kits when payment arrives.</div>
             ) : (
               <form className="quote" onSubmit={checkout}>
                 <h3>Checkout</h3>
@@ -442,7 +453,8 @@ export default function Things() {
                 </div>
                 {pay === 'invoice' && <input type="email" placeholder="Send invoice to (e.g. accounts payable)" value={form.billTo} onChange={(e) => setForm({ ...form, billTo: e.target.value })} />}
                 {pay === 'card' && <p className="fine">Card checkout isn't live yet. Choose invoice for now.</p>}
-                <button className="btn btn-dark btn-block" disabled={pay === 'card'}>Create invoice</button>
+                {orderErr && <p className="error">{orderErr}</p>}
+                <button className="btn btn-dark btn-block" disabled={pay === 'card' || placing}>{placing ? 'Placing order…' : 'Place order & get invoice'}</button>
               </form>
             )}
           </>

@@ -52,7 +52,7 @@ export default function Pricing() {
             <h2>{p.name}</h2>
             <div className="plan-price">{p.price}</div>
             <div className="plan-per">{p.per}</div>
-            <a href="#/app/discover" className={`btn btn-block ${p.hot ? 'btn-dark' : 'btn-line'}`}>{p.cta}</a>
+            <a href="#/signup" className={`btn btn-block ${p.hot ? 'btn-dark' : 'btn-line'}`}>{p.cta}</a>
             <ul>{p.items.map((i) => <li key={i}><Icon name="check" size={14} /> {i}</li>)}</ul>
           </article>
         ))}

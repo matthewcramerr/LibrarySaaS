@@ -23,7 +23,7 @@ export default function Home() {
             whole month in one click.
           </p>
           <div className="hero-ctas">
-            <a href="#/app/discover" className="btn btn-dark btn-lg">Start free</a>
+            <a href="#/signup" className="btn btn-dark btn-lg">Start free</a>
             <a href="#/pricing" className="btn btn-line btn-lg">Pricing for library systems</a>
           </div>
           <p className="fine">Free for one librarian. Library staff only.</p>
