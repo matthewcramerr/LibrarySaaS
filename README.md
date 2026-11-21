@@ -13,7 +13,7 @@ npm run build         # static site in dist/ (works on any static host)
 
 ## Live site
 
-https://matthewcramerr.github.io/LibrarySaaS/ (deploys on every push to `main`).
+https://matthewcramerr.github.io/shelfmark/ (deploys on every push to `main`).
 
 ## What's in v0.1
 
