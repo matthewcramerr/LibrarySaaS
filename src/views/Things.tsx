@@ -128,9 +128,9 @@ export default function Things() {
 
   function checkout(e: React.FormEvent) {
     e.preventDefault();
-    const no = `SW-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 90000) + 10000)}`;
+    const no = `SM-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 90000) + 10000)}`;
     try {
-      const k = 'shelfwise:lot-orders';
+      const k = 'shelfmark:lot-orders';
       localStorage.setItem(k, JSON.stringify([...JSON.parse(localStorage.getItem(k) ?? '[]'), { no, ...form, exempt, certName, subscriber, cart: cart.map(({ logo, ...rest }) => ({ ...rest, hasLogo: !!logo })), total: cartTotal, at: new Date().toISOString() }]));
     } catch { /* storage blocked */ }
     printInvoice(no);
@@ -142,7 +142,7 @@ export default function Things() {
     if (!w) return;
     const rows = cart.map((l) => `<tr><td>${esc(l.title)}<div class="s">${esc(CASES.find((x) => x.id === l.caseId)!.name)} · ${esc(l.age)} · MARC + shelf tag</div></td><td>${l.qty}</td><td>${money(l.unit)}</td><td>${money(l.unit * l.qty)}</td></tr>`).join('');
     w.document.write(`<!doctype html><title>Invoice ${no}</title><style>body{font:14px/1.5 Georgia,serif;color:#16140f;max-width:720px;margin:48px auto;padding:0 24px}h1{font-weight:500;margin:0}table{width:100%;border-collapse:collapse;margin:24px 0}td,th{text-align:left;padding:10px 6px;border-bottom:1px solid #ddd}th{font:12px system-ui;color:#777;text-transform:uppercase}.s{font:12px system-ui;color:#777}.top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #16140f;padding-bottom:16px}.tot{text-align:right;font-size:20px}.note{font:13px system-ui;color:#555;margin-top:24px}</style>
-<div class="top"><div><h1>Shelfwise</h1><div class="s">Library of Things</div></div><div style="text-align:right"><strong>DRAFT INVOICE ${no}</strong><div class="s">${new Date().toLocaleDateString()}</div></div></div>
+<div class="top"><div><h1>Shelfmark</h1><div class="s">Library of Things</div></div><div style="text-align:right"><strong>DRAFT INVOICE ${no}</strong><div class="s">${new Date().toLocaleDateString()}</div></div></div>
 <p><strong>Bill to:</strong> ${esc(form.library)}<br>${esc(form.name)} · ${esc(form.billTo || form.email)}</p>
 <table><tr><th>Kit</th><th>Qty</th><th>Each</th><th>Amount</th></tr>${rows}
 <tr><td colspan="3">Shipping</td><td>${subscriber ? 'Free' : 'TBD'}</td></tr><tr><td colspan="3">Sales tax</td><td>${exempt ? 'Exempt' + (certName ? ' (certificate on file)' : '') : 'TBD'}</td></tr></table>
@@ -175,7 +175,7 @@ export default function Things() {
   return (
     <div className="studio-page">
       <div className="crumbs">
-        <a href="#/">Shelfwise</a> <span>/</span> <a href="#/things">Library of Things</a> <span>/</span> Design a kit
+        <a href="#/">Shelfmark</a> <span>/</span> <a href="#/things">Library of Things</a> <span>/</span> Design a kit
         <button className="cart-btn" onClick={() => setOpen(true)}>
           <Icon name="cart" /> Cart{cartCount ? ` (${cartCount})` : ''}
         </button>
@@ -407,7 +407,7 @@ export default function Things() {
               ))}
             </ul>
             <div className="cart-total"><span>Estimated total</span><strong>{money(cartTotal)}</strong></div>
-            <div className="cart-ship"><span>Shipping</span><span>{subscriber ? 'Free for Shelfwise libraries' : 'Calculated on invoice'}</span></div>
+            <div className="cart-ship"><span>Shipping</span><span>{subscriber ? 'Free for Shelfmark libraries' : 'Calculated on invoice'}</span></div>
             <div className="cart-ship"><span>Sales tax</span><span>{exempt ? 'Tax exempt' : 'Calculated on invoice'}</span></div>
             {sent ? (
               <div className="banner"><Icon name="check" /> Invoice {sent} created. Print it or save it as a PDF for your municipality. We start building your kits when payment arrives. (Saved in this browser only for now.)</div>
@@ -418,7 +418,7 @@ export default function Things() {
                 <input required placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                 <input required type="email" placeholder="Work email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
                 <label className="check-row">
-                  <input type="checkbox" checked={subscriber} onChange={(e) => setSubscriber(e.target.checked)} /> We subscribe to Shelfwise (free shipping)
+                  <input type="checkbox" checked={subscriber} onChange={(e) => setSubscriber(e.target.checked)} /> We subscribe to Shelfmark (free shipping)
                 </label>
                 <label className="check-row">
                   <input type="checkbox" checked={exempt} onChange={(e) => setExempt(e.target.checked)} /> We're tax exempt

@@ -22,7 +22,7 @@ export default function SettingsView() {
       actions.replaceAll(JSON.parse(await f.text()) as State);
       setMsg('Backup restored.');
     } catch {
-      setMsg('That file is not a Shelfwise backup.');
+      setMsg('That file is not a Shelfmark backup.');
     }
   }
 
@@ -137,7 +137,7 @@ export default function SettingsView() {
         <h2>Backup</h2>
         <p className="muted small">Your data lives in this browser. Download a backup to move it.</p>
         <div className="row">
-          <button className="btn" onClick={() => download('shelfwise-backup.json', JSON.stringify(getState(), null, 2), 'application/json')}>
+          <button className="btn" onClick={() => download('shelfmark-backup.json', JSON.stringify(getState(), null, 2), 'application/json')}>
             Download backup
           </button>
           <label className="btn">

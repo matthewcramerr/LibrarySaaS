@@ -164,7 +164,7 @@ export default function Discover({ capture }: { capture?: string }) {
           <div className="capture-bm">
             <strong>Save from any website</strong>
             <p>Works in Edge and Chrome. Drag this button to your favorites bar. Highlight titles in Outlook, Kirkus or Edelweiss, then click it.</p>
-            <a className="bookmarklet" href={bookmarklet} onClick={(e) => e.preventDefault()}>+ Shelfwise</a>
+            <a className="bookmarklet" href={bookmarklet} onClick={(e) => e.preventDefault()}>+ Shelfmark</a>
           </div>
         </aside>
       </div>

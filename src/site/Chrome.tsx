@@ -52,7 +52,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="footer-base">
-        <span>© {new Date().getFullYear()} Shelfwise</span>
+        <span>© {new Date().getFullYear()} Shelfmark</span>
         <span>Book data from Open Library</span>
       </div>
     </footer>

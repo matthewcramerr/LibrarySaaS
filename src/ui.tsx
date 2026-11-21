@@ -34,7 +34,7 @@ export function Logo({ light = false }: { light?: boolean }) {
         <rect x="9" y="6" width="4" height="15" rx="1" fill="currentColor" opacity=".55" />
         <rect x="14.5" y="4" width="4" height="17" rx="1" transform="rotate(-12 16.5 12.5)" fill="var(--accent)" />
       </svg>
-      Shelfwise
+      Shelfmark
     </span>
   );
 }

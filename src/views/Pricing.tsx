@@ -31,7 +31,7 @@ const FAQ = [
   ['Where do prices come from?', 'You enter your contract discount and processing fees once. Every price is worked out from those.'],
   ['Can our system buy for all members?', 'Yes. The system signs once and pays one bill. Each library gets its own seats and lists. You can start with a pilot of five libraries.'],
   ['Can we pay by invoice?', 'Yes. We send an invoice your municipality can pay by check. Tax-exempt certificates are kept on file.'],
-  ['Who can sign up?', 'Library staff only. Shelfwise is built for collection development, not for readers.'],
+  ['Who can sign up?', 'Library staff only. Shelfmark is built for collection development, not for readers.'],
 ];
 
 export default function Pricing() {

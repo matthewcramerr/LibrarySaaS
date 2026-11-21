@@ -81,7 +81,7 @@ export default function Home() {
           <h2>Ordering shouldn't take nine tabs.</h2>
           <p>
             Reviews in one place. Wishlists in another. Vendor prices somewhere else. Then you check the catalog to see if
-            you already own it. Shelfwise puts it on one screen, built around how you actually order: by genre, by month,
+            you already own it. Shelfmark puts it on one screen, built around how you actually order: by genre, by month,
             against a budget.
           </p>
         </div>
@@ -109,7 +109,7 @@ export default function Home() {
         <article className="feature">
           <div className="feature-num">01</div>
           <h3>Capture from anywhere</h3>
-          <p>Highlight titles in Outlook or on any site and click the Shelfwise button. They land in your maybe pile.</p>
+          <p>Highlight titles in Outlook or on any site and click the Shelfmark button. They land in your maybe pile.</p>
         </article>
         <article className="feature">
           <div className="feature-num">02</div>
@@ -133,7 +133,7 @@ export default function Home() {
           <p className="kicker">Budget builder</p>
           <h2>“Give me $400 of the best-reviewed nonfiction for June.”</h2>
           <p>
-            Type a budget and a subject. Shelfwise fills the list with top-reviewed, popular titles you don't own yet, right
+            Type a budget and a subject. Shelfmark fills the list with top-reviewed, popular titles you don't own yet, right
             up to the dollar. Save it as an ordering list and you're done.
           </p>
           <a href="#/app/budget" className="text-link">Try the budget builder <Icon name="arrow" size={14} /></a>
@@ -170,7 +170,7 @@ export default function Home() {
           <p className="kicker">For the December spend</p>
           <h2>Every book you meant to buy this year.</h2>
           <p>
-            When there's money left at the end of the year, Shelfwise lists every title you saved but never ordered, ranked by
+            When there's money left at the end of the year, Shelfmark lists every title you saved but never ordered, ranked by
             reviews. Spend it well in an afternoon.
           </p>
         </div>

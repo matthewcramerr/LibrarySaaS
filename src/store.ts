@@ -59,7 +59,7 @@ export interface State {
   settings: Settings;
 }
 
-const KEY = 'shelfwise:v1';
+const KEY = 'shelfmark:v1';
 
 export const defaultSettings: Settings = {
   library: 'My Library',
@@ -78,7 +78,7 @@ export const defaultSettings: Settings = {
 
 function load(): State {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(KEY) ?? localStorage.getItem('shelfwise:v1'); // keep data saved under the old name
     if (raw) {
       const s = JSON.parse(raw) as State;
       return { books: s.books ?? {}, lists: s.lists ?? [], settings: { ...defaultSettings, ...s.settings } };
